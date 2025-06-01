@@ -99,17 +99,16 @@ As a TA for CPE-312, my primary role was to support lecturer in delivering a pos
 * **Audience:** An undergraduate student who can not understand college's Machine Learning lessons and Two graduated students who have no Machine Learning background but need to do research in Machine Learning and Deep Learning topic.
 * **Period:** March 2025 - Present
 
-**Overall Role & Purpose:**
-
-
 **Key Activities & Teaching Approach:**
 
 * **Curriculum & Material Development:**
-    * For my workshops, I developed a 4-part introductory series covering:
-        1.  What is ML? (Types of ML, common applications)
-        2.  Core Concepts (Features, labels, training/testing, overfitting/underfitting)
-        3.  Introduction to Key Algorithms (e.g., Linear Regression, K-Nearest Neighbors, Decision Trees – explained intuitively)
-        4.  Hands-on Project (e.g., a simple sentiment analysis or image classification project using Python and Scikit-learn).
+    * For my workshops, I developed a 6-part introductory series covering:
+        1.  Essential Python for ML
+        2.  Numpy Stack (Numpy, Pandas, Matplotlib)
+        3.  ML Core Concepts (Features, labels, ML Workflow, overfitting/underfitting)
+        4.  Classical ML Algorithms (e.g., Linear Regression, K-Nearest Neighbors, Decision Trees – explained intuitively)
+        5.  Hands-on Project (using Python and Scikit-learn).
+        6.  Deep Learning Algorithms (Pytorch, Neural Network, Computer Vision, NLP)
     * I created presentations, Jupyter Notebooks with code examples, and curated small datasets for practical exercises.
 * **One-on-One Tutoring:**
     * Sessions were highly personalized. Students would come with specific questions from their courses, personal projects, or general curiosity about ML.
