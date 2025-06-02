@@ -8,7 +8,7 @@ My journey in AI has been one of continuous learning. I undertook a dedicated pe
 
 Beyond these hands-on projects, my experience as a volunteer machine learning tutor—where I taught algorithms and reviewed student code—and as a teaching assistant for embedded systems, has significantly sharpened both my technical expertise and my communication abilities. I am eager to apply these skills and my enthusiasm for leveraging AI to solve real-world challenges in a professional capacity.
 
-* **You can ask my RAG chatbot about:** My approach to developing specific AI projects, such as the Image Captioning with Attention Mechanism or my work on Fine-Tuning Large Language Models, The AI and Machine Learning skills I significantly enhanced during my dedicated self-study and recalibration period from early 2024 to early 2025, or My full-stack development experience during my internship, How my experiences as a volunteer machine learning tutor and a teaching assistant for embedding systems have developed my technical communication and problem-solving skills.
+**You can ask my RAG chatbot about:** My approach to developing specific AI projects, such as the Image Captioning with Attention Mechanism or my work on Fine-Tuning Large Language Models, The AI and Machine Learning skills I significantly enhanced during my dedicated self-study and recalibration period from early 2024 to early 2025, or My full-stack development experience during my internship, How my experiences as a volunteer machine learning tutor and a teaching assistant for embedding systems have developed my technical communication and problem-solving skills.
 
 ---
 
