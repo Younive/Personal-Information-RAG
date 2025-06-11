@@ -60,12 +60,12 @@
 ---
 
 ## Teacher Assistance (TA)
-* **Course & Institution:** "CPE-312 Micro Controller and Embedding System" - Thai-Nichi Institute of Technology (TNI)
+* **Course & Institution:** "CPE-312 Microcontroller and Embedding System" - Thai-Nichi Institute of Technology (TNI)
 * **Term:** November 2023 - Febuary 2024
 * **Student Cohort:** Approximately 50 third-year undergraduate students with various skill levels and interest.
 
 **Overall Role & Purpose:**
-As a TA for CPE-312, my primary role was to support lecturer in delivering a positive and effective learning experience. This involved reinforcing core concepts in C programming for Micro Controller and Embedding System, facilitating practical application during lab sessions, and providing constructive guidance.
+As a TA for CPE-312, my primary role was to support lecturer in delivering a positive and effective learning experience. This involved reinforcing core concepts in C programming for Microcontroller and Embedding System, facilitating practical application during lab sessions, and providing constructive guidance.
 
 **Key Responsibilities & Activities:**
 
