@@ -193,4 +193,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-vector_db
+vector_db/
