@@ -1,0 +1,8 @@
+gradio==5.35.0
+langchain==0.3.26
+langchain_chroma==0.2.4
+langchain_core==0.3.68
+langchain_google_genai==2.1.6
+pytest==8.4.1
+python-dotenv==1.1.1
+sentence_transformers==3.4.1
