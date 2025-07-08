@@ -1,6 +1,6 @@
 import os
 from langchain.document_loaders import DirectoryLoader, TextLoader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import MarkdownTextSplitter
 from app.config import KNOWLEDGE_BASE_DIR, CHUNK_SIZE, CHUNK_OVERLAP
 
 def add_metadata(document, doc_type):
@@ -42,7 +42,7 @@ def load_and_chunk_documents():
         return []
 
     # Using CharacterTextSplitter as in your notebook. Consider MarkdownTextSplitter for .md specific splitting.
-    text_splitter = CharacterTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
+    text_splitter = MarkdownTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
     chunked_documents = text_splitter.split_documents(documents)
     
     print(f"Total number of chunks: {len(chunked_documents)}")
