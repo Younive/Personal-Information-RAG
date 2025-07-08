@@ -1,0 +1,174 @@
+/* --- Gemini-Inspired Theme (Final Polished Version) --- */
+:root {
+    --gemini-background: #F0F4F9;
+    --gemini-container-background: #FFFFFF;
+    --gemini-font-family: 'Google Sans', 'Inter', sans-serif;
+    --gemini-text-color: #3C4043;
+    --gemini-border-color: #DADCE0;
+    --gemini-user-bubble-background: linear-gradient(135deg, #D1E3FF 0%, #E8F0FE 100%);
+    --gemini-user-bubble-text-color: #1F3A5F;
+    --gemini-bot-bubble-background: #F0F4F9;
+    --gemini-bot-bubble-text-color: #3C4043;
+    --gemini-accent-color: #1A73E8;
+    --gemini-disabled-color: #F7F9FC;
+    --gemini-disabled-text-color: #AEB3B8;
+}
+
+/* Import a font similar to Google Sans */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+gradio-app {
+    font-family: var(--gemini-font-family) !important;
+    background-color: var(--gemini-background) !important;
+}
+
+/* --- Chatbot Container --- */
+#screen_fit_chatbot {
+    height: 78vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: var(--gemini-container-background) !important;
+    border: 1px solid var(--gemini-border-color) !important;
+    border-radius: 16px;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+    overflow: hidden;
+}
+
+#screen_fit_chatbot > .wrap {
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+    min-height: 0 !important;
+    padding: 16px;
+}
+
+/* --- Chat Rows & Bubbles --- */
+.message-row, .bubble-wrap {
+    background: transparent !important;
+}
+
+.message.user, .message.bot {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05) !important;
+    border-radius: 20px !important;
+    padding: 14px 18px !important;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* User's chat bubbles */
+.message.user {
+    background: var(--gemini-user-bubble-background) !important;
+    border: 1px solid #D1E3FF;
+    border-bottom-right-radius: 6px !important;
+}
+
+/* Bot's chat bubbles */
+.message.bot {
+    background: var(--gemini-bot-bubble-background) !important;
+    border: 1px solid #ffffff;
+    border-bottom-left-radius: 6px !important;
+}
+
+/* --- Message Text Styling --- */
+.message.user p, .message.user ul, .message.user ol {
+    color: var(--gemini-user-bubble-text-color) !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+}
+
+.message.bot p, .message.bot ul, .message.bot ol {
+    color: var(--gemini-bot-bubble-text-color) !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+}
+
+/* --- Input Textbox Area --- */
+.block.padded {
+    padding: 12px !important;
+    /* This makes the top border invisible, creating a seamless look */
+    border-top: 1px solid transparent !important; 
+    background-color: var(--gemini-container-background) !important;
+}
+
+.input-container textarea {
+    background-color: #F7F9FC !important;
+    color: var(--gemini-text-color) !important;
+    border-radius: 24px !important;
+    border: 1px solid #ffffff !important;
+    box-shadow: none !important;
+    padding: 12px 18px !important;
+    font-size: 16px;
+}
+
+.input-container textarea:focus {
+    border-color: var(--gemini-accent-color) !important;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2) !important;
+}
+
+.gr-group {
+    border: 1px solid #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+}
+
+/* --- Send Button --- */
+.submit-button {
+    background: var(--gemini-accent-color) !important;
+    border-radius: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    margin-left: 5px !important;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* This styles the SVG icon inside the button to give it visual padding */
+.submit-button svg {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+
+.submit-button:hover {
+    background: #185ABC !important;
+}
+
+.submit-button:active {
+    transform: scale(0.95);
+}
+
+/* --- Loading State & Animation --- */
+.input-container textarea:disabled {
+    background-color: var(--gemini-disabled-color) !important;
+    color: var(--gemini-disabled-text-color) !important;
+    cursor: not-allowed;
+}
+
+.submit-button:disabled {
+    background: var(--gemini-disabled-color) !important;
+    cursor: not-allowed;
+}
+
+/* This section hides all loading indicators for a cleaner look */
+.status-tracker, .wrap.default{
+    display: none !important;
+}
+
+/* --- Hide Unwanted UI Elements --- */
+[data-testid="block-label"] {
+    display: none !important;
+}
+
+.icon-button-wrapper.top-panel {
+    display: none !important;
+}
+
+.message-buttons {
+    display: none !important;
+}
+
+footer {
+    display: none !important;
+}
