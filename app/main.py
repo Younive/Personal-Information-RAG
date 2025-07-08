@@ -1,9 +1,10 @@
-# app/main.py
 import gradio as gr
 from app.documents_processor import load_and_chunk_documents
 from app.vector_db_manager import get_vector_store
 from app.llm_chain_setup import get_conversational_chain
-from app.config import KNOWLEDGE_BASE_DIR, VECTOR_DB_DIR # For a check
+from app.config import KNOWLEDGE_BASE_DIR, VECTOR_DB_DIR, GEMINI_API_KEY, LLM_MODEL_NAME
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.memory import ConversationBufferMemory
 import os
 
 # --- Global Setup (Consider doing this once on app startup) ---
@@ -20,12 +21,17 @@ if not chunked_docs and (REBUILD_VECTOR_DB_ON_STARTUP or not os.path.exists(VECT
     print("No documents were loaded. Cannot initialize vector store or chain.")
     conversation_chain = None
 else:
-    vectorstore = get_vector_store(chunked_docs, rebuild_db=REBUILD_VECTOR_DB_ON_STARTUP)
-    conversation_chain = get_conversational_chain(vectorstore)
+    vectorstore = get_vector_store(chunked_docs, rebuild_db=True)
+    
+    # Initialize LLM and Memory here
+    llm = ChatGoogleGenerativeAI(model=LLM_MODEL_NAME, temperature=0.0, api_key=GEMINI_API_KEY)
+    memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer') # Important: add output_key
+    
+    # Get the fully configured chain from your setup file
+    conversation_chain = get_conversational_chain(vectorstore, llm, memory)
 
 print("Application setup complete.")
 # --- End Global Setup ---
-
 
 def chat_with_rag(question, history_tuples):
 
@@ -39,7 +45,7 @@ def chat_with_rag(question, history_tuples):
         print(f"Error during chat: {e}")
         return "Sorry, an error occurred while processing your question."
 
-# Gradio UI components (from your notebook)
+# Gradio UI components
 screen_fit_css = """
 #screen_fit_chatbot {
     height: 78vh !important;
