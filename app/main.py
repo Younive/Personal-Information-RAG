@@ -7,6 +7,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 import os
 
+css_path = os.path.join(os.path.dirname(__file__), 'css', 'style.css')
+
 # --- Global Setup (Consider doing this once on app startup) ---
 print("Starting application setup...")
 # By default, it will now load the DB if it exists, not rebuild it.
@@ -45,19 +47,9 @@ def chat_with_rag(question, history_tuples):
         print(f"Error during chat: {e}")
         return "Sorry, an error occurred while processing your question."
 
-# Gradio UI components
-screen_fit_css = """
-#screen_fit_chatbot {
-    height: 78vh !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-#screen_fit_chatbot > .wrap {
-    flex-grow: 1 !important;
-    overflow-y: auto !important;
-    min-height: 0 !important;
-}
-"""
+# chatbot css
+with open(css_path, "r", encoding="utf-8") as f:
+    custom_css = f.read()
 
 initial_bot_greeting = "Hello! You can ask me questions about my builder's experiences and projects. What would you like to know?"
 
@@ -86,7 +78,7 @@ def launch_app():
     view = gr.ChatInterface(
         fn=chat_interface_fn, # Use the function adapted for message, history_list_of_dicts
         chatbot=live_chatbot, # Pass the pre-configured chatbot
-        css=screen_fit_css,
+        css=custom_css,
         type="messages"
     )
     view.launch(inbrowser=True, debug=True) # Set share=True for a public link if needed
