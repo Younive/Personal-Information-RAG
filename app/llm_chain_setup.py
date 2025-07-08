@@ -1,51 +1,79 @@
-from langchain_openai import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_core.prompts import ChatPromptTemplate
-from app.config import GEMINI_API_KEY, LLM_MODEL_NAME, SEARCH_K
+from langchain_core.retrievers import BaseRetriever
+from langchain_core.language_models import BaseChatModel
+from langchain_core.output_parsers import StrOutputParser
+from sentence_transformers import CrossEncoder
+from langchain_core.vectorstores import VectorStoreRetriever
+from app.prompts import SYSTEM_PROMPT_CONTENT, EXPANSION_PROMPT_TEMPLATE
+from app.config import CROSS_ENCODER_MODEL
 
-# System prompt from your notebook
-SYSTEM_PROMPT_CONTENT = """
-You are a specialized AI assistant. I am your builder, and I have a knowledge base that contains information about my qualifications, projects, and other relevant details. Your role is to assist recruiters and HR professionals in understanding my background and expertise.
-You will answer questions about me, your builder, you can refer to me as 'My Builder', based solely on the information provided in the context documents from my knowledge base. You must not use any external knowledge or make assumptions beyond what is explicitly stated in those documents.
-Your dedicated role is to assist recruiters and HR professionals. In your conversation, the person you are talking to (the recruiter or HR professional) will be referred to as 'you'.
+class AdvancedRetriever(BaseRetriever):
+    """
+    A retriever that combines query expansion and cross-encoder re-ranking.
+    """
+    vectorstore_retriever: VectorStoreRetriever
+    llm: BaseChatModel
+    top_k: int = 5
 
-It is absolutely crucial to understand that 'Builder' IS NOT the person you are currently interacting with.
-Therefore, you MUST NOT use phrases that equate or confuse 'Builder' with 'you' (the recruiter/HR). For example, do not say 'Builder (you)', 'your projects as Builder', or any similar phrasing that implies the recruiter is Builder. 'Builder' is strictly the subject of the knowledge base.
+    def _get_relevant_documents(self, query: str, *, run_manager):
+        reranker = CrossEncoder(CROSS_ENCODER_MODEL)
+        expansion_prompt = ChatPromptTemplate.from_template(EXPANSION_PROMPT_TEMPLATE)
+        expansion_chain = expansion_prompt | self.llm | StrOutputParser()
+        expanded_queries_str = expansion_chain.invoke({"question": query}, config={"run_name": "QueryExpansion"})
+        all_queries = [query] + expanded_queries_str.strip().split('\n')
+        
+        all_retrieved_docs = []
+        for q in all_queries:
+            # Retrieve documents for each expanded query
+            all_retrieved_docs.extend(self.vectorstore_retriever.get_relevant_documents(q))
 
-Your answers must be based STRICTLY and ONLY on the information contained in the provided context documents from Builder's knowledge base.
-When discussing Builder's qualifications, projects, or any other information, consistently use the name 'Builder' or 'My Builder'. For example: 'Builder has expertise in...' or 'This project was undertaken by Builder.'
+        unique_docs_dict = {doc.page_content: doc for doc in all_retrieved_docs}
+        unique_docs = list(unique_docs_dict.values())
+        
+        if not unique_docs:
+            return []
 
-If the information needed to answer a question is not present in the provided context, you MUST clearly state: 'I am unable to find that specific information about Builder in the provided documents.'
-Under no circumstances should you use external knowledge, make assumptions, or generate information not explicitly present in the context.
-Your responses must be concise, factual, and maintain a professional and helpful tone when addressing the recruiter or HR professional (i.e., 'you').
-If the provided context is empty or entirely irrelevant to the question asked, respond with: 'I cannot answer that question based on the provided documents about Builder.'
-"""
+        doc_texts = [doc.page_content for doc in unique_docs]
+        query_doc_pairs = [[query, doc_text] for doc_text in doc_texts]
+        
+        scores = reranker.predict(query_doc_pairs)
+        
+        doc_scores = list(zip(unique_docs, scores))
+        doc_scores.sort(key=lambda x: x[1], reverse=True)
+        
+        reranked_docs = [doc for doc, score in doc_scores[:self.top_k]]
+        
+        return reranked_docs
 
 QA_PROMPT_TEMPLATE = ChatPromptTemplate.from_messages([
     ("system", SYSTEM_PROMPT_CONTENT),
     ("human", "Given the following context and question, please provide an answer.\n\nContext:\n{context}\n\nQuestion:\n{question}")
 ])
 
-def get_conversational_chain(vector_store):
-    llm = ChatOpenAI(
-        temperature=0.7,
-        model_name=LLM_MODEL_NAME,
-        # For direct Google GenAI usage:
-        # from langchain_google_genai import ChatGoogleGenerativeAI
-        # llm = ChatGoogleGenerativeAI(model=LLM_MODEL_NAME, google_api_key=GEMINI_API_KEY, temperature=0.7)
-        # Let's assume your ChatOpenAI setup for Gemini is intended and works:
-        base_url='https://generativelanguage.googleapis.com/v1beta',
-        api_key=GEMINI_API_KEY,
+
+def get_conversational_chain(vector_store, llm, memory):
+    """
+    Builds and returns the conversational RAG chain using the AdvancedRetriever.
+    """
+    # Create the base vector store retriever. It should retrieve more documents initially 
+    # to give the expansion and re-ranking process a good pool to work with.
+    base_retriever = vector_store.as_retriever(search_kwargs={"k": 10})
+
+    # Initialize your new AdvancedRetriever, passing it the base retriever and the LLM.
+    # It will return the final top 5 most relevant documents.
+    advanced_retriever = AdvancedRetriever(
+        vectorstore_retriever=base_retriever, 
+        llm=llm,
+        top_k=5
     )
 
-    memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
-    retriever = vector_store.as_retriever(search_kwargs={"k": SEARCH_K})
-
+    # Create the final chain using the advanced_retriever
     conversation_chain = ConversationalRetrievalChain.from_llm(
-        llm=llm,
-        retriever=retriever,
-        memory=memory,
+        llm=llm, 
+        retriever=advanced_retriever,
+        memory=memory, 
         combine_docs_chain_kwargs={"prompt": QA_PROMPT_TEMPLATE}
     )
+    
     return conversation_chain
