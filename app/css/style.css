@@ -69,13 +69,13 @@ gradio-app {
 }
 
 /* --- Message Text Styling --- */
-.message.user p, .message.user ul, .message.user ol {
+.message.user p, .message.user ul, .message.user ol, .message.user li, .message.user marker {
     color: var(--gemini-user-bubble-text-color) !important;
     font-size: 16px !important;
     line-height: 1.7 !important;
 }
 
-.message.bot p, .message.bot ul, .message.bot ol {
+.message.bot p, .message.bot ul, .message.bot ol, .message.bot li, .message.bot marker {
     color: var(--gemini-bot-bubble-text-color) !important;
     font-size: 16px !important;
     line-height: 1.7 !important;
