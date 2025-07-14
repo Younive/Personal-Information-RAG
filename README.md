@@ -22,8 +22,6 @@ This project goes beyond a naive RAG implementation by incorporating several adv
 
 * **Modular, Testable Codebase**: The application is structured into logical modules for document processing, vector store management, and chain setup, with a corresponding suite of `pytest` tests.
 
-* **Ready for Deployment**: Includes a `modal_app.py` script for one-command deployment to the [Modal.com](https://modal.com) serverless platform.
-
 ## 🏛️ Architecture
 
 The application follows a modern RAG architecture:
